@@ -5,7 +5,7 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 from math import ceil
 
-from fastapi import Depends, FastAPI, HTTPException, Query, status
+from fastapi import Depends, FastAPI, HTTPException, Query, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import Select, and_, func, or_, select
 from sqlalchemy.orm import Session, joinedload
@@ -64,6 +64,22 @@ def lot_to_schema(lot: models.Lot) -> schemas.LotOut:
     sort_order=lot.sort_order,
     created_at=lot.created_at,
     updated_at=lot.updated_at,
+  )
+
+
+def create_lot_model(payload: schemas.LotCreate, category_id: int) -> models.Lot:
+  return models.Lot(
+    slug=payload.slug,
+    name=payload.name,
+    category_id=category_id,
+    price=payload.price,
+    description=payload.description,
+    specs=payload.specs,
+    images=payload.images,
+    featured=payload.featured,
+    sold=payload.sold,
+    glitch_background=payload.glitch_background,
+    sort_order=payload.sort_order,
   )
 
 
@@ -162,7 +178,7 @@ def get_bootstrap(db: Session = Depends(get_db)) -> schemas.BootstrapResponse:
     lots=[lot_to_schema(lot) for lot in lots],
     category_labels=category_labels,
     glitch_backgrounds=glitch_backgrounds,
-    contacts=[schemas.ContactOut.model_validate(contact) for contact in contacts],
+    contacts=[schemas.ContactOut.from_orm(contact) for contact in contacts],
   )
 
 
@@ -234,6 +250,12 @@ def admin_list_lots(
   return [lot_to_schema(lot) for lot in lots]
 
 
+@app.get("/api/v1/admin/lots/{slug}", response_model=schemas.LotOut)
+def admin_get_lot(slug: str, db: Session = Depends(get_db)) -> schemas.LotOut:
+  lot = lot_by_slug_or_404(db, slug)
+  return lot_to_schema(lot)
+
+
 @app.post("/api/v1/admin/lots", response_model=schemas.LotOut, status_code=status.HTTP_201_CREATED)
 def admin_create_lot(payload: schemas.LotCreate, db: Session = Depends(get_db)) -> schemas.LotOut:
   exists = db.scalar(select(models.Lot).where(models.Lot.slug == payload.slug))
@@ -241,20 +263,7 @@ def admin_create_lot(payload: schemas.LotCreate, db: Session = Depends(get_db)) 
     raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"Lot slug '{payload.slug}' already exists")
 
   category = category_by_code_or_404(db, payload.category_code)
-
-  lot = models.Lot(
-    slug=payload.slug,
-    name=payload.name,
-    category_id=category.id,
-    price=payload.price,
-    description=payload.description,
-    specs=payload.specs,
-    images=payload.images,
-    featured=payload.featured,
-    sold=payload.sold,
-    glitch_background=payload.glitch_background,
-    sort_order=payload.sort_order,
-  )
+  lot = create_lot_model(payload, category.id)
   db.add(lot)
   db.commit()
   db.refresh(lot)
@@ -262,11 +271,90 @@ def admin_create_lot(payload: schemas.LotCreate, db: Session = Depends(get_db)) 
   return lot_to_schema(lot)
 
 
+@app.post("/api/v1/admin/lots/bulk", response_model=schemas.LotBulkCreateResult)
+def admin_bulk_create_lots(payload: schemas.LotBulkCreate, db: Session = Depends(get_db)) -> schemas.LotBulkCreateResult:
+  items = payload.items
+  if not items:
+    return schemas.LotBulkCreateResult(created=[], errors=[], total=0)
+
+  categories = db.scalars(select(models.Category)).all()
+  category_map = {category.code: category for category in categories}
+
+  requested_slugs = [item.slug for item in items]
+  existing_slugs = set(
+    db.scalars(select(models.Lot.slug).where(models.Lot.slug.in_(requested_slugs))).all()
+  )
+
+  new_lots: list[models.Lot] = []
+  errors: list[schemas.LotBulkCreateError] = []
+  planned_slugs: set[str] = set()
+
+  for item in items:
+    if item.slug in existing_slugs:
+      errors.append(schemas.LotBulkCreateError(slug=item.slug, reason="Slug already exists"))
+      continue
+    if item.slug in planned_slugs:
+      errors.append(schemas.LotBulkCreateError(slug=item.slug, reason="Duplicate slug in payload"))
+      continue
+
+    category = category_map.get(item.category_code)
+    if category is None:
+      errors.append(
+        schemas.LotBulkCreateError(slug=item.slug, reason=f"Category '{item.category_code}' not found")
+      )
+      continue
+
+    lot = create_lot_model(item, category.id)
+    db.add(lot)
+    new_lots.append(lot)
+    planned_slugs.add(item.slug)
+
+  db.commit()
+
+  created = [lot_to_schema(lot_by_slug_or_404(db, lot.slug)) for lot in new_lots]
+  return schemas.LotBulkCreateResult(created=created, errors=errors, total=len(items))
+
+
+@app.post("/api/v1/admin/lots/{slug}/duplicate", response_model=schemas.LotOut, status_code=status.HTTP_201_CREATED)
+def admin_duplicate_lot(
+  slug: str,
+  payload: schemas.LotDuplicateCreate,
+  db: Session = Depends(get_db),
+) -> schemas.LotOut:
+  source = lot_by_slug_or_404(db, slug)
+
+  exists = db.scalar(select(models.Lot).where(models.Lot.slug == payload.new_slug))
+  if exists is not None:
+    raise HTTPException(
+      status_code=status.HTTP_409_CONFLICT,
+      detail=f"Lot slug '{payload.new_slug}' already exists",
+    )
+
+  duplicate = models.Lot(
+    slug=payload.new_slug,
+    name=payload.new_name or source.name,
+    category_id=source.category_id,
+    price=source.price,
+    description=source.description,
+    specs=list(source.specs or []),
+    images=list(source.images or []),
+    featured=source.featured if payload.featured is None else payload.featured,
+    sold=False if payload.sold is None else payload.sold,
+    glitch_background=source.glitch_background,
+    sort_order=source.sort_order if payload.sort_order is None else payload.sort_order,
+  )
+  db.add(duplicate)
+  db.commit()
+  db.refresh(duplicate)
+  fresh = lot_by_slug_or_404(db, duplicate.slug)
+  return lot_to_schema(fresh)
+
+
 @app.patch("/api/v1/admin/lots/{slug}", response_model=schemas.LotOut)
 def admin_update_lot(slug: str, payload: schemas.LotUpdate, db: Session = Depends(get_db)) -> schemas.LotOut:
   lot = lot_by_slug_or_404(db, slug)
 
-  data = payload.model_dump(exclude_unset=True)
+  data = payload.dict(exclude_unset=True)
   if "slug" in data and data["slug"] != slug:
     exists = db.scalar(select(models.Lot).where(models.Lot.slug == data["slug"]))
     if exists is not None:
@@ -286,19 +374,24 @@ def admin_update_lot(slug: str, payload: schemas.LotUpdate, db: Session = Depend
   return lot_to_schema(refreshed)
 
 
-@app.delete("/api/v1/admin/lots/{slug}", status_code=status.HTTP_204_NO_CONTENT)
-def admin_delete_lot(slug: str, db: Session = Depends(get_db)) -> None:
+@app.delete(
+  "/api/v1/admin/lots/{slug}",
+  status_code=status.HTTP_204_NO_CONTENT,
+  response_class=Response,
+)
+def admin_delete_lot(slug: str, db: Session = Depends(get_db)):
   lot = db.scalar(select(models.Lot).where(models.Lot.slug == slug))
   if lot is None:
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Lot '{slug}' not found")
   db.delete(lot)
   db.commit()
+  return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @app.get("/api/v1/admin/categories", response_model=list[schemas.CategoryOut])
 def admin_list_categories(db: Session = Depends(get_db)) -> list[schemas.CategoryOut]:
   categories = db.scalars(select(models.Category).order_by(models.Category.sort_order.asc())).all()
-  return [schemas.CategoryOut.model_validate(category) for category in categories]
+  return [schemas.CategoryOut.from_orm(category) for category in categories]
 
 
 @app.post("/api/v1/admin/categories", response_model=schemas.CategoryOut, status_code=status.HTTP_201_CREATED)
@@ -311,24 +404,28 @@ def admin_create_category(payload: schemas.CategoryCreate, db: Session = Depends
   db.add(category)
   db.commit()
   db.refresh(category)
-  return schemas.CategoryOut.model_validate(category)
+  return schemas.CategoryOut.from_orm(category)
 
 
 @app.patch("/api/v1/admin/categories/{code}", response_model=schemas.CategoryOut)
 def admin_update_category(code: str, payload: schemas.CategoryUpdate, db: Session = Depends(get_db)) -> schemas.CategoryOut:
   category = category_by_code_or_404(db, code)
 
-  data = payload.model_dump(exclude_unset=True)
+  data = payload.dict(exclude_unset=True)
   for key, value in data.items():
     setattr(category, key, value)
 
   db.commit()
   db.refresh(category)
-  return schemas.CategoryOut.model_validate(category)
+  return schemas.CategoryOut.from_orm(category)
 
 
-@app.delete("/api/v1/admin/categories/{code}", status_code=status.HTTP_204_NO_CONTENT)
-def admin_delete_category(code: str, db: Session = Depends(get_db)) -> None:
+@app.delete(
+  "/api/v1/admin/categories/{code}",
+  status_code=status.HTTP_204_NO_CONTENT,
+  response_class=Response,
+)
+def admin_delete_category(code: str, db: Session = Depends(get_db)):
   category = category_by_code_or_404(db, code)
   in_use = db.scalar(select(func.count(models.Lot.id)).where(models.Lot.category_id == category.id))
   if in_use:
@@ -339,6 +436,7 @@ def admin_delete_category(code: str, db: Session = Depends(get_db)) -> None:
 
   db.delete(category)
   db.commit()
+  return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @app.get("/api/v1/admin/contacts", response_model=list[schemas.ContactOut])
@@ -346,7 +444,7 @@ def admin_list_contacts(db: Session = Depends(get_db)) -> list[schemas.ContactOu
   contacts = db.scalars(
     select(models.ContactChannel).order_by(models.ContactChannel.sort_order.asc(), models.ContactChannel.code.asc())
   ).all()
-  return [schemas.ContactOut.model_validate(contact) for contact in contacts]
+  return [schemas.ContactOut.from_orm(contact) for contact in contacts]
 
 
 @app.post("/api/v1/admin/contacts", response_model=schemas.ContactOut, status_code=status.HTTP_201_CREATED)
@@ -355,28 +453,33 @@ def admin_create_contact(payload: schemas.ContactCreate, db: Session = Depends(g
   if existing is not None:
     raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"Contact '{payload.code}' already exists")
 
-  contact = models.ContactChannel(**payload.model_dump())
+  contact = models.ContactChannel(**payload.dict())
   db.add(contact)
   db.commit()
   db.refresh(contact)
-  return schemas.ContactOut.model_validate(contact)
+  return schemas.ContactOut.from_orm(contact)
 
 
 @app.patch("/api/v1/admin/contacts/{code}", response_model=schemas.ContactOut)
 def admin_update_contact(code: str, payload: schemas.ContactUpdate, db: Session = Depends(get_db)) -> schemas.ContactOut:
   contact = contact_by_code_or_404(db, code)
 
-  data = payload.model_dump(exclude_unset=True)
+  data = payload.dict(exclude_unset=True)
   for key, value in data.items():
     setattr(contact, key, value)
 
   db.commit()
   db.refresh(contact)
-  return schemas.ContactOut.model_validate(contact)
+  return schemas.ContactOut.from_orm(contact)
 
 
-@app.delete("/api/v1/admin/contacts/{code}", status_code=status.HTTP_204_NO_CONTENT)
-def admin_delete_contact(code: str, db: Session = Depends(get_db)) -> None:
+@app.delete(
+  "/api/v1/admin/contacts/{code}",
+  status_code=status.HTTP_204_NO_CONTENT,
+  response_class=Response,
+)
+def admin_delete_contact(code: str, db: Session = Depends(get_db)):
   contact = contact_by_code_or_404(db, code)
   db.delete(contact)
   db.commit()
+  return Response(status_code=status.HTTP_204_NO_CONTENT)

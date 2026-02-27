@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
 
 class CategoryBase(BaseModel):
@@ -23,7 +23,8 @@ class CategoryUpdate(BaseModel):
 
 
 class CategoryOut(CategoryBase):
-  model_config = ConfigDict(from_attributes=True)
+  class Config:
+    orm_mode = True
 
 
 class ContactBase(BaseModel):
@@ -54,7 +55,8 @@ class ContactUpdate(BaseModel):
 
 
 class ContactOut(ContactBase):
-  model_config = ConfigDict(from_attributes=True)
+  class Config:
+    orm_mode = True
 
 
 class LotBase(BaseModel):
@@ -89,9 +91,30 @@ class LotUpdate(BaseModel):
   sort_order: int | None = None
 
 
-class LotOut(BaseModel):
-  model_config = ConfigDict(from_attributes=True)
+class LotBulkCreate(BaseModel):
+  items: list[LotCreate] = Field(default_factory=list)
 
+
+class LotBulkCreateError(BaseModel):
+  slug: str
+  reason: str
+
+
+class LotBulkCreateResult(BaseModel):
+  created: list["LotOut"]
+  errors: list[LotBulkCreateError]
+  total: int
+
+
+class LotDuplicateCreate(BaseModel):
+  new_slug: str = Field(min_length=1, max_length=128)
+  new_name: str | None = Field(default=None, min_length=1, max_length=255)
+  sold: bool | None = None
+  featured: bool | None = None
+  sort_order: int | None = None
+
+
+class LotOut(BaseModel):
   slug: str
   name: str
   category_code: str
@@ -106,6 +129,9 @@ class LotOut(BaseModel):
   sort_order: int
   created_at: datetime | None = None
   updated_at: datetime | None = None
+
+  class Config:
+    orm_mode = True
 
 
 class LotsPage(BaseModel):
@@ -129,3 +155,6 @@ class BootstrapResponse(BaseModel):
   category_labels: dict[str, str]
   glitch_backgrounds: list[str]
   contacts: list[ContactOut]
+
+
+LotBulkCreateResult.update_forward_refs(LotOut=LotOut)

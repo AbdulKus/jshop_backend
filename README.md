@@ -36,7 +36,13 @@ export JSHOP_DATABASE_URL="sqlite:///./jshop.db"
 Admin endpoints:
 
 - `GET /api/v1/admin/dashboard`
-- `GET/POST/PATCH/DELETE /api/v1/admin/lots`
+- `GET /api/v1/admin/lots`
+- `GET /api/v1/admin/lots/{slug}`
+- `POST /api/v1/admin/lots`
+- `POST /api/v1/admin/lots/bulk`
+- `POST /api/v1/admin/lots/{slug}/duplicate`
+- `PATCH /api/v1/admin/lots/{slug}`
+- `DELETE /api/v1/admin/lots/{slug}`
 - `GET/POST/PATCH/DELETE /api/v1/admin/categories`
 - `GET/POST/PATCH/DELETE /api/v1/admin/contacts`
 
