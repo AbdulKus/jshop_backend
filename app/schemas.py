@@ -59,6 +59,22 @@ class ContactOut(ContactBase):
     orm_mode = True
 
 
+class SiteTextBase(BaseModel):
+  key: str = Field(min_length=1, max_length=128)
+  value: str = ""
+  description: str = ""
+
+
+class SiteTextUpsert(BaseModel):
+  value: str
+  description: str | None = None
+
+
+class SiteTextOut(SiteTextBase):
+  class Config:
+    orm_mode = True
+
+
 class LotBase(BaseModel):
   slug: str = Field(min_length=1, max_length=128)
   name: str = Field(min_length=1, max_length=255)
@@ -148,6 +164,8 @@ class AdminDashboard(BaseModel):
   lots_available: int
   categories_total: int
   contacts_total: int
+  site_texts_total: int
+  visits_count: int
 
 
 class BootstrapResponse(BaseModel):
@@ -155,6 +173,9 @@ class BootstrapResponse(BaseModel):
   category_labels: dict[str, str]
   glitch_backgrounds: list[str]
   contacts: list[ContactOut]
+  site_texts: dict[str, str]
+  visits_count: int
+  sold_lots_count: int
 
 
 LotBulkCreateResult.update_forward_refs(LotOut=LotOut)

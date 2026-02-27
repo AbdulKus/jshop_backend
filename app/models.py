@@ -57,3 +57,23 @@ class ContactChannel(Base):
   is_external: Mapped[bool] = mapped_column(Boolean, default=True)
   icon_svg: Mapped[str] = mapped_column(Text, default="")
   sort_order: Mapped[int] = mapped_column(Integer, default=0)
+
+
+class SiteText(Base):
+  __tablename__ = "site_texts"
+
+  id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+  key: Mapped[str] = mapped_column(String(128), unique=True, index=True)
+  value: Mapped[str] = mapped_column(Text, default="")
+  description: Mapped[str] = mapped_column(String(255), default="")
+  updated_at: Mapped[datetime] = mapped_column(
+    DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+  )
+
+
+class SiteMetric(Base):
+  __tablename__ = "site_metrics"
+
+  id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+  key: Mapped[str] = mapped_column(String(64), unique=True, index=True)
+  value: Mapped[int] = mapped_column(Integer, default=0)

@@ -106,6 +106,20 @@ def contact_by_code_or_404(db: Session, code: str) -> models.ContactChannel:
   return contact
 
 
+def get_or_create_visits_metric(db: Session) -> models.SiteMetric:
+  metric = db.scalar(select(models.SiteMetric).where(models.SiteMetric.key == "visits"))
+  if metric is None:
+    metric = models.SiteMetric(key="visits", value=0)
+    db.add(metric)
+    db.flush()
+  return metric
+
+
+def get_site_texts_map(db: Session) -> dict[str, str]:
+  site_texts = db.scalars(select(models.SiteText).order_by(models.SiteText.key.asc())).all()
+  return {item.key: item.value for item in site_texts}
+
+
 def apply_lot_filters(
   stmt: Select,
   q: str | None,
@@ -166,6 +180,13 @@ def get_bootstrap(db: Session = Depends(get_db)) -> schemas.BootstrapResponse:
   contacts = db.scalars(
     select(models.ContactChannel).order_by(models.ContactChannel.sort_order.asc(), models.ContactChannel.code.asc())
   ).all()
+  sold_lots_count = sum(1 for lot in lots if lot.sold)
+
+  visits_metric = get_or_create_visits_metric(db)
+  visits_metric.value += 1
+  db.commit()
+  db.refresh(visits_metric)
+  visits_count = visits_metric.value
 
   category_labels = {"all": "Все"}
   for category in categories:
@@ -173,12 +194,16 @@ def get_bootstrap(db: Session = Depends(get_db)) -> schemas.BootstrapResponse:
 
   seed_data = load_seed_data()
   glitch_backgrounds = list(seed_data.get("glitch_backgrounds", []))
+  site_texts = get_site_texts_map(db)
 
   return schemas.BootstrapResponse(
     lots=[lot_to_schema(lot) for lot in lots],
     category_labels=category_labels,
     glitch_backgrounds=glitch_backgrounds,
     contacts=[schemas.ContactOut.from_orm(contact) for contact in contacts],
+    site_texts=site_texts,
+    visits_count=visits_count,
+    sold_lots_count=sold_lots_count,
   )
 
 
@@ -227,6 +252,8 @@ def admin_dashboard(db: Session = Depends(get_db)) -> schemas.AdminDashboard:
   lots_sold = int(db.scalar(select(func.count(models.Lot.id)).where(models.Lot.sold.is_(True))) or 0)
   categories_total = int(db.scalar(select(func.count(models.Category.id))) or 0)
   contacts_total = int(db.scalar(select(func.count(models.ContactChannel.id))) or 0)
+  site_texts_total = int(db.scalar(select(func.count(models.SiteText.id))) or 0)
+  visits = get_or_create_visits_metric(db)
 
   return schemas.AdminDashboard(
     lots_total=lots_total,
@@ -234,6 +261,8 @@ def admin_dashboard(db: Session = Depends(get_db)) -> schemas.AdminDashboard:
     lots_available=max(0, lots_total - lots_sold),
     categories_total=categories_total,
     contacts_total=contacts_total,
+    site_texts_total=site_texts_total,
+    visits_count=visits.value,
   )
 
 
@@ -483,3 +512,29 @@ def admin_delete_contact(code: str, db: Session = Depends(get_db)):
   db.delete(contact)
   db.commit()
   return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@app.get("/api/v1/admin/site-texts", response_model=list[schemas.SiteTextOut])
+def admin_list_site_texts(db: Session = Depends(get_db)) -> list[schemas.SiteTextOut]:
+  items = db.scalars(select(models.SiteText).order_by(models.SiteText.key.asc())).all()
+  return [schemas.SiteTextOut.from_orm(item) for item in items]
+
+
+@app.put("/api/v1/admin/site-texts/{key}", response_model=schemas.SiteTextOut)
+def admin_upsert_site_text(
+  key: str,
+  payload: schemas.SiteTextUpsert,
+  db: Session = Depends(get_db),
+) -> schemas.SiteTextOut:
+  item = db.scalar(select(models.SiteText).where(models.SiteText.key == key))
+  if item is None:
+    item = models.SiteText(key=key, value=payload.value, description=payload.description or "")
+    db.add(item)
+  else:
+    item.value = payload.value
+    if payload.description is not None:
+      item.description = payload.description
+
+  db.commit()
+  db.refresh(item)
+  return schemas.SiteTextOut.from_orm(item)

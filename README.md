@@ -7,6 +7,8 @@ FastAPI backend for `jshop_front` and `jshop_admin`.
 - SQLite-backed catalog with 19 seeded lots from the original layout.
 - Public API for storefront bootstrap and catalog listing.
 - Admin CRUD API for lots, categories, and contact channels.
+- Visit counter (`visits`) incremented on each storefront bootstrap call.
+- Site text dictionary stored in DB and editable via admin API.
 - CORS enabled for local frontend/admin development.
 
 ## Run
@@ -45,6 +47,8 @@ Admin endpoints:
 - `DELETE /api/v1/admin/lots/{slug}`
 - `GET/POST/PATCH/DELETE /api/v1/admin/categories`
 - `GET/POST/PATCH/DELETE /api/v1/admin/contacts`
+- `GET /api/v1/admin/site-texts`
+- `PUT /api/v1/admin/site-texts/{key}`
 
 Interactive docs:
 
