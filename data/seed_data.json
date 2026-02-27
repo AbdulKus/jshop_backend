@@ -1,0 +1,496 @@
+{
+  "category_labels": {
+    "all": "Все",
+    "ring": "Кольца",
+    "necklace": "Колье",
+    "earrings": "Серьги",
+    "bracelet": "Браслеты",
+    "pendant": "Подвесы",
+    "set": "Комплекты",
+    "chain": "Цепи"
+  },
+  "glitch_backgrounds": [
+    "bg_glitch/20260227_111640.jpg",
+    "bg_glitch/20260227_111643.jpg",
+    "bg_glitch/20260227_111649.jpg",
+    "bg_glitch/20260227_111654.jpg",
+    "bg_glitch/20260227_111659.jpg",
+    "bg_glitch/20260227_111706.jpg",
+    "bg_glitch/20260227_111710.jpg",
+    "bg_glitch/20260227_111715.jpg",
+    "bg_glitch/20260227_111722.jpg",
+    "bg_glitch/20260227_111805.jpg",
+    "bg_glitch/20260227_111815.jpg",
+    "bg_glitch/20260227_111820.jpg",
+    "bg_glitch/20260227_111824.jpg",
+    "bg_glitch/20260227_111830.jpg",
+    "bg_glitch/20260227_111838.jpg",
+    "bg_glitch/20260227_111843.jpg"
+  ],
+  "contacts": [
+    {
+      "code": "telegram",
+      "label": "Telegram",
+      "hint": "@AbdulKus",
+      "url_template": "https://t.me/AbdulKus",
+      "subject_template": "",
+      "body_template": "",
+      "is_external": true,
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" role=\"img\" aria-hidden=\"true\">\n        <path fill=\"currentColor\" d=\"M20.67 3.61c.77-.31 1.53.38 1.35 1.18l-2.73 12.47c-.16.74-.95 1.12-1.62.78l-4.17-2.11-2.35 2.17a.9.9 0 0 1-1.51-.52l-.48-3.48 9.59-8.71a.45.45 0 0 0-.54-.72L6.32 12.3l-4.1-1.64a.9.9 0 0 1 .05-1.69z\"/>\n      </svg>",
+      "sort_order": 0
+    },
+    {
+      "code": "jabber",
+      "label": "Jabber",
+      "hint": "abdulkus@xmpp.jp",
+      "url_template": "xmpp:abdulkus@xmpp.jp?message",
+      "subject_template": "",
+      "body_template": "",
+      "is_external": false,
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" role=\"img\" aria-hidden=\"true\">\n        <path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" d=\"M4.6 6.7a5.7 5.7 0 0 1 5.7-2.7h3.4a5.7 5.7 0 0 1 5.7 5.7v2.6a5.7 5.7 0 0 1-5.7 5.7H10l-3.4 2.3v-3A5.7 5.7 0 0 1 4 12.3z\"/>\n        <circle cx=\"9.4\" cy=\"10.9\" r=\"1.1\" fill=\"currentColor\"/>\n        <circle cx=\"12\" cy=\"10.9\" r=\"1.1\" fill=\"currentColor\"/>\n        <circle cx=\"14.6\" cy=\"10.9\" r=\"1.1\" fill=\"currentColor\"/>\n      </svg>",
+      "sort_order": 1
+    },
+    {
+      "code": "signal",
+      "label": "Signal",
+      "hint": "+1 202 555 0142",
+      "url_template": "https://signal.me/#p/+12025550142",
+      "subject_template": "",
+      "body_template": "",
+      "is_external": true,
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" role=\"img\" aria-hidden=\"true\">\n        <path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-dasharray=\"2.2 2.2\" d=\"M12 3.6c4.9 0 8.8 3.3 8.8 7.5S16.9 18.6 12 18.6c-.7 0-1.4-.1-2.1-.2l-4 1.9 1.2-3.5c-2.2-1.3-3.6-3.3-3.6-5.7 0-4.2 4-7.5 8.8-7.5z\"/>\n        <path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" d=\"M8.1 11.1h7.8M9.5 14h5\"/>\n      </svg>",
+      "sort_order": 2
+    },
+    {
+      "code": "mail",
+      "label": "Mail",
+      "hint": "orders@aerogem.shop",
+      "url_template": "mailto:orders@aerogem.shop",
+      "subject_template": "Заказ: {lot_name}",
+      "body_template": "Здравствуйте! Хочу оформить заказ на лот «{lot_name}».",
+      "is_external": false,
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" role=\"img\" aria-hidden=\"true\">\n        <rect x=\"3.3\" y=\"5.1\" width=\"17.4\" height=\"13.8\" rx=\"2.2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"/>\n        <path fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" d=\"m4.6 7.1 7.4 5.6 7.4-5.6\"/>\n      </svg>",
+      "sort_order": 3
+    }
+  ],
+  "lots": [
+    {
+      "slug": "aurora-ring",
+      "name": "Aurora Halo Ring",
+      "category_code": "ring",
+      "price": 249000,
+      "description": "Центральный бриллиант в ореоле из микропаве. Мягкая округлая шинка и посадка рассчитаны на ежедневный комфорт.",
+      "specs": [
+        "Золото 750 пробы",
+        "Бриллиант 0.82 ct",
+        "Ручная полировка",
+        "Сертификат подлинности"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/jewelry,ring?lock=21",
+        "https://loremflickr.com/1400/1000/diamond,ring?lock=22",
+        "https://loremflickr.com/1400/1000/luxury,ring?lock=23"
+      ],
+      "featured": true,
+      "sold": false,
+      "glitch_background": "",
+      "sort_order": 0
+    },
+    {
+      "slug": "celeste-necklace",
+      "name": "Celeste Sapphire Necklace",
+      "category_code": "necklace",
+      "price": 189000,
+      "description": "Сапфировая капля в обрамлении световых граней. Подвес создан так, чтобы ловить блики при каждом движении.",
+      "specs": [
+        "Белое золото",
+        "Сапфир 1.9 ct",
+        "Длина 42 см",
+        "Механизм anti-twist"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/jewelry,necklace?lock=24",
+        "https://loremflickr.com/1400/1000/sapphire,necklace?lock=25",
+        "https://loremflickr.com/1400/1000/luxury,pendant?lock=26"
+      ],
+      "featured": true,
+      "sold": false,
+      "glitch_background": "",
+      "sort_order": 1
+    },
+    {
+      "slug": "verona-earrings",
+      "name": "Verona Pearl Earrings",
+      "category_code": "earrings",
+      "price": 97000,
+      "description": "Классические серьги с натуральным перламутровым свечением и платиновой фурнитурой. Легкие и праздничные одновременно.",
+      "specs": [
+        "Платина",
+        "Натуральный жемчуг",
+        "Вес пары 5.8 г",
+        "Английский замок"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/jewelry,earrings?lock=27",
+        "https://loremflickr.com/1400/1000/pearl,earrings?lock=28",
+        "https://loremflickr.com/1400/1000/luxury,earrings?lock=29"
+      ],
+      "featured": false,
+      "sold": false,
+      "glitch_background": "",
+      "sort_order": 2
+    },
+    {
+      "slug": "orion-bracelet",
+      "name": "Orion Emerald Bracelet",
+      "category_code": "bracelet",
+      "price": 156000,
+      "description": "Гибкая посадка и ювелирная точность звеньев. Изумрудные вставки добавляют глубину цвета и эффект дорогого сияния.",
+      "specs": [
+        "Золото 585 пробы",
+        "Изумруды багет",
+        "Длина 17-19 см",
+        "Регулируемый замок"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/jewelry,bracelet?lock=30",
+        "https://loremflickr.com/1400/1000/emerald,bracelet?lock=31",
+        "https://loremflickr.com/1400/1000/luxury,bracelet?lock=32"
+      ],
+      "featured": false,
+      "sold": false,
+      "glitch_background": "",
+      "sort_order": 3
+    },
+    {
+      "slug": "noctis-pendant",
+      "name": "Noctis Black Diamond Pendant",
+      "category_code": "pendant",
+      "price": 212000,
+      "description": "Контрастный кулон с черным бриллиантом и холодным металлическим блеском. Для образов с акцентом на графику.",
+      "specs": [
+        "Платина",
+        "Черный бриллиант 1.1 ct",
+        "Минималистичная огранка",
+        "Подарочный футляр"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/jewelry,pendant?lock=33",
+        "https://loremflickr.com/1400/1000/diamond,pendant?lock=34",
+        "https://loremflickr.com/1400/1000/luxury,jewelry?lock=35"
+      ],
+      "featured": true,
+      "sold": true,
+      "glitch_background": "bg_glitch/20260227_111843.jpg",
+      "sort_order": 4
+    },
+    {
+      "slug": "solaris-set",
+      "name": "Solaris Topaz Set",
+      "category_code": "set",
+      "price": 278000,
+      "description": "Комплект из кольца и серег с имперским топазом. Баланс между торжественным характером и чистой геометрией линий.",
+      "specs": [
+        "Белое золото",
+        "Имперский топаз",
+        "Комплект: 3 изделия",
+        "Гарантия 12 месяцев"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/jewelry,set?lock=36",
+        "https://loremflickr.com/1400/1000/topaz,jewelry?lock=37",
+        "https://loremflickr.com/1400/1000/luxury,set?lock=38"
+      ],
+      "featured": false,
+      "sold": false,
+      "glitch_background": "",
+      "sort_order": 5
+    },
+    {
+      "slug": "riviera-ruby",
+      "name": "Riviera Ruby Ring",
+      "category_code": "ring",
+      "price": 143000,
+      "description": "Рубиновая дорожка с точной калибровкой камней создает непрерывный алый поток. Кольцо идеально сочетается с вечерними образами.",
+      "specs": [
+        "Красное золото",
+        "Рубины 0.9 ct",
+        "Дорожка full round",
+        "Индивидуальный размер"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/ruby,ring?lock=39",
+        "https://loremflickr.com/1400/1000/jewelry,ring?lock=40",
+        "https://loremflickr.com/1400/1000/luxury,gemstone?lock=41"
+      ],
+      "featured": false,
+      "sold": true,
+      "glitch_background": "bg_glitch/20260227_111640.jpg",
+      "sort_order": 6
+    },
+    {
+      "slug": "mist-chain",
+      "name": "Mist Platinum Chain",
+      "category_code": "chain",
+      "price": 88000,
+      "description": "Платиновая цепь с воздушной фактурой звеньев. Носится соло или как база для подвесов любой формы.",
+      "specs": [
+        "Платина",
+        "Длина 45 см",
+        "Вес 9.4 г",
+        "Двойной замок"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/jewelry,chain?lock=42",
+        "https://loremflickr.com/1400/1000/luxury,chain?lock=43",
+        "https://loremflickr.com/1400/1000/jewelry,necklace?lock=44"
+      ],
+      "featured": false,
+      "sold": false,
+      "glitch_background": "",
+      "sort_order": 7
+    },
+    {
+      "slug": "lumen-opal-ring",
+      "name": "Lumen Opal Ring",
+      "category_code": "ring",
+      "price": 132000,
+      "description": "Опал с живой игрой цвета в тонкой оправе. Камень переливается в холодных и теплых оттенках при разном свете.",
+      "specs": [
+        "Золото 585 пробы",
+        "Австралийский опал",
+        "Вес 4.1 г",
+        "Подарочный кейс"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/opal,ring?lock=45",
+        "https://loremflickr.com/1400/1000/jewelry,ring?lock=46",
+        "https://loremflickr.com/1400/1000/luxury,opal?lock=47"
+      ],
+      "featured": false,
+      "sold": true,
+      "glitch_background": "bg_glitch/20260227_111643.jpg",
+      "sort_order": 8
+    },
+    {
+      "slug": "atlas-cuff",
+      "name": "Atlas Silver Cuff",
+      "category_code": "bracelet",
+      "price": 92000,
+      "description": "Жесткий браслет с чистой геометрией и зеркальной полировкой. Легко комбинируется как с базовыми, так и с вечерними образами.",
+      "specs": [
+        "Стерлинговое серебро",
+        "Регулируемый размер",
+        "Ручная гравировка",
+        "Антиокислительное покрытие"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/silver,bracelet?lock=48",
+        "https://loremflickr.com/1400/1000/jewelry,bracelet?lock=49",
+        "https://loremflickr.com/1400/1000/luxury,bracelet?lock=50"
+      ],
+      "featured": false,
+      "sold": false,
+      "glitch_background": "",
+      "sort_order": 9
+    },
+    {
+      "slug": "serein-earrings",
+      "name": "Serein Diamond Earrings",
+      "category_code": "earrings",
+      "price": 174000,
+      "description": "Подвесные серьги с бриллиантовой дорожкой и легкой подвижностью. При движении создают мягкий световой шлейф.",
+      "specs": [
+        "Белое золото",
+        "Бриллианты 0.58 ct",
+        "Вес пары 6.3 г",
+        "Надежный замок"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/diamond,earrings?lock=51",
+        "https://loremflickr.com/1400/1000/jewelry,earrings?lock=52",
+        "https://loremflickr.com/1400/1000/luxury,earrings?lock=53"
+      ],
+      "featured": true,
+      "sold": false,
+      "glitch_background": "",
+      "sort_order": 10
+    },
+    {
+      "slug": "noble-chain",
+      "name": "Noble Rope Chain",
+      "category_code": "chain",
+      "price": 101000,
+      "description": "Плетение rope с плотной посадкой и ярким металлическим блеском. Универсальная цепь для соло-носки и подвесов.",
+      "specs": [
+        "Золото 585 пробы",
+        "Длина 50 см",
+        "Вес 11.2 г",
+        "Карабин усиленный"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/gold,chain?lock=54",
+        "https://loremflickr.com/1400/1000/jewelry,chain?lock=55",
+        "https://loremflickr.com/1400/1000/luxury,necklace?lock=56"
+      ],
+      "featured": false,
+      "sold": false,
+      "glitch_background": "",
+      "sort_order": 11
+    },
+    {
+      "slug": "astra-necklace",
+      "name": "Astra Moon Necklace",
+      "category_code": "necklace",
+      "price": 117000,
+      "description": "Колье с лунным камнем и серебристым свечением огранки. Минималистичный профиль подходит к повседневной и праздничной стилистике.",
+      "specs": [
+        "Белое золото",
+        "Лунный камень",
+        "Длина 40-45 см",
+        "Регулируемая цепочка"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/moonstone,necklace?lock=57",
+        "https://loremflickr.com/1400/1000/jewelry,necklace?lock=58",
+        "https://loremflickr.com/1400/1000/luxury,pendant?lock=59"
+      ],
+      "featured": false,
+      "sold": false,
+      "glitch_background": "",
+      "sort_order": 12
+    },
+    {
+      "slug": "prime-ruby-set",
+      "name": "Prime Ruby Suite",
+      "category_code": "set",
+      "price": 312000,
+      "description": "Премиальный комплект с рубинами и бриллиантовыми акцентами. Выдержанная архитектура форм придает комплекту характер коллекционного изделия.",
+      "specs": [
+        "Белое золото",
+        "Рубины 1.8 ct",
+        "Комплект: серьги + кольцо",
+        "Лимитированная серия"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/ruby,jewelry?lock=60",
+        "https://loremflickr.com/1400/1000/luxury,set?lock=61",
+        "https://loremflickr.com/1400/1000/diamond,set?lock=62"
+      ],
+      "featured": true,
+      "sold": true,
+      "glitch_background": "bg_glitch/20260227_111722.jpg",
+      "sort_order": 13
+    },
+    {
+      "slug": "aqua-pendant",
+      "name": "Aqua Drop Pendant",
+      "category_code": "pendant",
+      "price": 126000,
+      "description": "Каплевидный кулон с аквамарином и прозрачной посадкой камня. За счет тонкой оправы создает эффект парящего кристалла.",
+      "specs": [
+        "Платина",
+        "Аквамарин 1.2 ct",
+        "Цепь 42 см",
+        "Платиновый замок"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/aquamarine,pendant?lock=63",
+        "https://loremflickr.com/1400/1000/jewelry,pendant?lock=64",
+        "https://loremflickr.com/1400/1000/luxury,jewelry?lock=65"
+      ],
+      "featured": false,
+      "sold": false,
+      "glitch_background": "",
+      "sort_order": 14
+    },
+    {
+      "slug": "viva-ring",
+      "name": "Viva Citrine Ring",
+      "category_code": "ring",
+      "price": 109000,
+      "description": "Кольцо с цитрином медового оттенка и мягким высоким кастом. Камень раскрывает теплый отблеск под дневным и вечерним светом.",
+      "specs": [
+        "Желтое золото",
+        "Цитрин 1.5 ct",
+        "Вес 4.9 г",
+        "Индивидуальный размер"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/citrine,ring?lock=66",
+        "https://loremflickr.com/1400/1000/jewelry,ring?lock=67",
+        "https://loremflickr.com/1400/1000/luxury,ring?lock=68"
+      ],
+      "featured": false,
+      "sold": true,
+      "glitch_background": "bg_glitch/20260227_111710.jpg",
+      "sort_order": 15
+    },
+    {
+      "slug": "azure-bracelet",
+      "name": "Azure Tennis Bracelet",
+      "category_code": "bracelet",
+      "price": 168000,
+      "description": "Теннисный браслет с акцентом на плавность линий и ровную посадку по запястью. Микс сапфировых и бриллиантовых вставок усиливает глубину цвета.",
+      "specs": [
+        "Белое золото",
+        "Сапфиры + бриллианты",
+        "Длина 18 см",
+        "Классический замок"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/sapphire,bracelet?lock=69",
+        "https://loremflickr.com/1400/1000/diamond,bracelet?lock=70",
+        "https://loremflickr.com/1400/1000/jewelry,bracelet?lock=71"
+      ],
+      "featured": false,
+      "sold": false,
+      "glitch_background": "",
+      "sort_order": 16
+    },
+    {
+      "slug": "echo-earrings",
+      "name": "Echo Hoop Earrings",
+      "category_code": "earrings",
+      "price": 86000,
+      "description": "Лаконичные серьги-кольца с выразительным полированным профилем. Дают чистый блеск и удобны для долгого ношения.",
+      "specs": [
+        "Красное золото",
+        "Диаметр 22 мм",
+        "Вес пары 4.6 г",
+        "Надежная застежка"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/hoop,earrings?lock=72",
+        "https://loremflickr.com/1400/1000/jewelry,earrings?lock=73",
+        "https://loremflickr.com/1400/1000/luxury,earrings?lock=74"
+      ],
+      "featured": false,
+      "sold": false,
+      "glitch_background": "",
+      "sort_order": 17
+    },
+    {
+      "slug": "zenith-necklace",
+      "name": "Zenith Emerald Necklace",
+      "category_code": "necklace",
+      "price": 221000,
+      "description": "Колье с центральным изумрудом и тонкой россыпью бриллиантов. Композиция рассчитана на яркую посадку в зоне декольте.",
+      "specs": [
+        "Платина",
+        "Изумруд 1.4 ct",
+        "Бриллианты 0.3 ct",
+        "Длина 41 см"
+      ],
+      "images": [
+        "https://loremflickr.com/1400/1000/emerald,necklace?lock=75",
+        "https://loremflickr.com/1400/1000/jewelry,necklace?lock=76",
+        "https://loremflickr.com/1400/1000/luxury,necklace?lock=77"
+      ],
+      "featured": true,
+      "sold": true,
+      "glitch_background": "bg_glitch/20260227_111805.jpg",
+      "sort_order": 18
+    }
+  ]
+}
